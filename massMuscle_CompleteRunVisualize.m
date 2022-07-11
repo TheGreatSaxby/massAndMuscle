@@ -47,7 +47,7 @@ tool.setModel(osimModel);
 
 % Define the start and finish times for simulation
 tool.setStartTime(0);
-tool.setFinalTime(3);
+tool.setFinalTime(analysisParameters(10));
 tool.setSolveForEquilibrium(true);
 
 % Define the name of the forward analysis

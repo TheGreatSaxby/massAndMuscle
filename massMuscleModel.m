@@ -27,7 +27,7 @@
 % defined for the muscles.
 
 %% Clean it up
-clear; close; clc;
+close; clc;
 
 % Pull in the modeling classes straight from the OpenSim distribution
 import org.opensim.modeling.*
@@ -57,7 +57,7 @@ ground.addDisplayGeometry('anchor1.vtp');
 anchorGeom=ground.getDisplayer.getGeometrySet().get(0);
 anchorGeom.getTransform().T(); %translation
 anchorGeom.getTransform().R(); %rotation
-newTranslation=Vec3(0,0,-0.35); % Magic numbers.
+newTranslation=Vec3(analysisParameters(1),analysisParameters(2),analysisParameters(3)); % Magic numbers.
 newTransform=Transform(newTranslation);
 anchorGeom.setTransform(newTransform);
 
@@ -66,7 +66,7 @@ anchorGeom.setTransform(newTransform);
 % Create a block Body with associate dimensions, mass properties, and DisplayGeometry
 mass = Body();
 mass.setName('Mass');
-mass.setMass(20);
+mass.setMass(analysisParameters(4));
 mass.setMassCenter(zeroVec3);
 % Need to set inertia
 mass.addDisplayGeometry('block.vtp');
@@ -77,13 +77,13 @@ mass.addDisplayGeometry('block.vtp');
 
 % Create a new free joint with 6 degrees-of-freedom (coordinates) between the mass and ground bodies
 % blockSideLength      = 0.1;
-locationInParentVec3 = ArrayDouble.createVec3([0, -0.5, 0]);
+locationInParentVec3 = ArrayDouble.createVec3([analysisParameters(5),analysisParameters(6),analysisParameters(7)]);
 massToGround         = FreeJoint('massToGround', ground, locationInParentVec3, zeroVec3, mass, zeroVec3, zeroVec3, false);
 
 % Set bounds on coordinates
 jointCoordinateSet=massToGround.getCoordinateSet();
 angleRange 	  = [-pi/2, pi/2];
-positionRange = [-2, 2];
+positionRange = [analysisParameters(8),analysisParameters(9)];
 jointCoordinateSet.get(0).setRange(angleRange);
 jointCoordinateSet.get(1).setRange(angleRange);
 jointCoordinateSet.get(2).setRange(angleRange);
@@ -99,10 +99,10 @@ model.addBody(mass)
 %///////////////////////////////////////
 
 % Set muscle parameters
-maxIsometricForce  = 1000.0;
-optimalFiberLength = 0.25;
-tendonSlackLength  = 0.1;
-pennationAngle 	   = 0.0;
+maxIsometricForce  = muscleParameters(1);
+optimalFiberLength = muscleParameters(2);
+tendonSlackLength  = muscleParameters(3);
+pennationAngle 	   = muscleParameters(4);
 
 % Create new muscle
 muscle = Thelen2003Muscle();
@@ -121,7 +121,7 @@ model.addForce(muscle)
 
 %Set up Controller
 initialTime = 0.0;
-finalTime = 3.0;
+finalTime = analysisParameters(10);
 
 muscleController = PrescribedController();
 muscleController.setName('LinearRamp Controller')
