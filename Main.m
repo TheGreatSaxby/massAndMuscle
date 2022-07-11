@@ -24,5 +24,5 @@ muscleParameters = str2double(answer1);
 
 clear dlg_title answer1 answer2 prompt1 prompt2
 
-% massMuscleModel
-% massMuscle_CompleteRunVisualize
+massMuscleModel
+massMuscle_CompleteRunVisualize
