@@ -26,3 +26,19 @@ clear dlg_title answer1 answer2 prompt1 prompt2
 
 massMuscleModel
 massMuscle_CompleteRunVisualize
+
+a = readtable(['massMuscle_states_degrees.mot'],'FileType','text','ReadVariableNames',true);
+Time = a.time;
+Velocity = a.massToGround_yTranslation_u;
+Acceleration = 0; 
+Acceleration(2:height(a),1) = diff(Velocity(:))./diff(Time(:));
+mass = analysisParameters(4);
+MuscleForce = mass * (Acceleration + 9.81);
+
+plotMuscleSimulationResults
+
+h6=subplot(3,2,6);
+plot(Time, MuscleForce, 'r');
+ylabel('Muscle force (m/s^2)');
+xlabel('Simulation time (s)');
+
